@@ -1,0 +1,1419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Study Planner — Finals 2025</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap');
+
+:root {
+  --bg: #0a0a0f;
+  --surface: #12121a;
+  --surface2: #1a1a26;
+  --surface3: #22222f;
+  --border: rgba(255,255,255,0.06);
+  --border2: rgba(255,255,255,0.1);
+  --text: #f0f0f8;
+  --text2: #a0a0b8;
+  --text3: #606078;
+  --accent: #7c6fcd;
+  --accent2: #9d8fe0;
+  --accent-glow: rgba(124,111,205,0.25);
+  --mech306: #e07c5a;
+  --mech306-bg: rgba(224,124,90,0.12);
+  --mech302: #5ab4e0;
+  --mech302-bg: rgba(90,180,224,0.12);
+  --mech304: #5ae07c;
+  --mech304-bg: rgba(90,224,124,0.12);
+  --brisa: #e0b45a;
+  --brisa-bg: rgba(224,180,90,0.12);
+  --sport: #e05a8c;
+  --sport-bg: rgba(224,90,140,0.12);
+  --free: #5a7ce0;
+  --free-bg: rgba(90,124,224,0.12);
+  --high: #e05a5a;
+  --med: #e0b45a;
+  --low: #5ae07c;
+  --radius: 14px;
+  --radius-sm: 8px;
+  --shadow: 0 4px 24px rgba(0,0,0,0.4);
+  --shadow-sm: 0 2px 8px rgba(0,0,0,0.3);
+  --font-display: 'Syne', sans-serif;
+  --font-body: 'DM Sans', sans-serif;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.5;
+  min-height: 100vh;
+  overflow-x: hidden;
+  padding-bottom: 100px;
+}
+
+/* ── TOP BAR ── */
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(10,10,15,0.9);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  padding: 12px 16px 10px;
+}
+.topbar-inner { max-width: 480px; margin: 0 auto; }
+.topbar-row1 { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.app-title { font-family: var(--font-display); font-size: 18px; font-weight: 800; letter-spacing: -0.5px; background: linear-gradient(135deg, var(--accent2), #c4b5f4); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.topbar-actions { display: flex; gap: 8px; }
+.icon-btn { background: var(--surface2); border: 1px solid var(--border2); border-radius: var(--radius-sm); width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text2); font-size: 16px; transition: all 0.2s; }
+.icon-btn:active { transform: scale(0.92); }
+.icon-btn.active { background: var(--accent-glow); border-color: var(--accent); color: var(--accent2); }
+
+/* PROGRESS BAR */
+.progress-section { }
+.progress-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+.progress-label { font-size: 11px; color: var(--text3); font-weight: 500; letter-spacing: 0.5px; text-transform: uppercase; }
+.progress-val { font-family: var(--font-display); font-size: 13px; font-weight: 700; color: var(--accent2); }
+.progress-bar-track { height: 4px; background: var(--surface3); border-radius: 10px; overflow: hidden; }
+.progress-bar-fill { height: 100%; border-radius: 10px; background: linear-gradient(90deg, var(--accent), var(--accent2)); transition: width 0.5s ease; }
+
+/* STATS ROW */
+.stats-row { display: flex; gap: 8px; margin-top: 10px; }
+.stat-pill { flex: 1; background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 6px 8px; text-align: center; }
+.stat-num { font-family: var(--font-display); font-size: 16px; font-weight: 800; color: var(--text); display: block; }
+.stat-lbl { font-size: 10px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.4px; }
+.stat-pill.streak .stat-num { color: var(--brisa); }
+.stat-pill.hours .stat-num { color: var(--mech302); }
+.stat-pill.score .stat-num { color: var(--mech304); }
+
+/* ── TABS ── */
+.tabs { display: flex; gap: 0; background: var(--surface); border-bottom: 1px solid var(--border); position: sticky; top: calc(var(--topbar-h, 160px)); z-index: 90; }
+.tab { flex: 1; padding: 11px 6px; font-family: var(--font-display); font-size: 12px; font-weight: 600; letter-spacing: 0.3px; text-align: center; cursor: pointer; color: var(--text3); border-bottom: 2px solid transparent; transition: all 0.2s; text-transform: uppercase; }
+.tab.active { color: var(--accent2); border-bottom-color: var(--accent); }
+
+/* ── PAGE ── */
+.page { display: none; padding: 0 12px; max-width: 480px; margin: 0 auto; }
+.page.active { display: block; }
+
+/* ── DAY CARD ── */
+.day-card {
+  margin: 10px 0;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  transition: box-shadow 0.2s;
+}
+.day-card.today { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent-glow), var(--shadow); }
+.day-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 14px;
+  cursor: pointer;
+  user-select: none;
+  background: var(--surface);
+}
+.day-header:active { background: var(--surface2); }
+.day-date-block { display: flex; flex-direction: column; }
+.day-name { font-family: var(--font-display); font-size: 16px; font-weight: 700; letter-spacing: -0.3px; }
+.day-date { font-size: 12px; color: var(--text3); margin-top: 1px; }
+.day-meta { display: flex; align-items: center; gap: 8px; }
+.day-badge { font-size: 10px; font-weight: 600; padding: 3px 7px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.3px; }
+.badge-trip { background: var(--brisa-bg); color: var(--brisa); }
+.badge-family { background: var(--free-bg); color: var(--free); }
+.badge-exam { background: rgba(224,90,90,0.15); color: #e07a7a; }
+.badge-interview { background: var(--brisa-bg); color: var(--brisa); }
+.day-progress-mini { width: 36px; height: 36px; }
+.day-chevron { font-size: 12px; color: var(--text3); margin-left: 4px; transition: transform 0.25s; }
+.day-card.collapsed .day-chevron { transform: rotate(-90deg); }
+.day-tasks { padding: 0 10px 10px; }
+.day-card.collapsed .day-tasks { display: none; }
+.day-load-warn { background: rgba(224,90,90,0.1); border: 1px solid rgba(224,90,90,0.2); border-radius: 8px; padding: 6px 10px; font-size: 12px; color: #e07a7a; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+
+/* ── TASK BLOCK ── */
+.task-block {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 10px;
+  margin: 4px 0;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--surface2);
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+.task-block::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; border-radius: 3px 0 0 3px; }
+.task-block.mech306::before { background: var(--mech306); }
+.task-block.mech302::before { background: var(--mech302); }
+.task-block.mech304::before { background: var(--mech304); }
+.task-block.brisa::before { background: var(--brisa); }
+.task-block.sport::before { background: var(--sport); }
+.task-block.free::before { background: var(--free); }
+.task-block.custom::before { background: var(--accent); }
+.task-block.done { opacity: 0.45; }
+.task-block.done .task-title { text-decoration: line-through; }
+.task-block:active { transform: scale(0.98); }
+
+.task-check {
+  width: 22px; height: 22px; min-width: 22px;
+  border-radius: 6px;
+  border: 2px solid var(--border2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px;
+  transition: all 0.2s;
+  margin-top: 1px;
+  background: transparent;
+}
+.task-block.done .task-check { background: var(--accent); border-color: var(--accent); }
+.task-check-icon { display: none; color: white; }
+.task-block.done .task-check-icon { display: block; }
+
+.task-body { flex: 1; min-width: 0; }
+.task-time { font-size: 11px; color: var(--text3); font-weight: 500; margin-bottom: 2px; font-family: var(--font-display); }
+.task-title { font-size: 14px; font-weight: 500; color: var(--text); line-height: 1.3; }
+.task-desc { font-size: 12px; color: var(--text2); margin-top: 3px; line-height: 1.4; }
+.task-tags { display: flex; gap: 4px; margin-top: 5px; flex-wrap: wrap; }
+.task-tag { font-size: 10px; font-weight: 600; padding: 2px 6px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.3px; }
+.tag-mech306 { background: var(--mech306-bg); color: var(--mech306); }
+.tag-mech302 { background: var(--mech302-bg); color: var(--mech302); }
+.tag-mech304 { background: var(--mech304-bg); color: var(--mech304); }
+.tag-brisa { background: var(--brisa-bg); color: var(--brisa); }
+.tag-sport { background: var(--sport-bg); color: var(--sport); }
+.tag-free { background: var(--free-bg); color: var(--free); }
+.task-priority { width: 6px; height: 6px; border-radius: 50%; margin-top: 8px; min-width: 6px; }
+.priority-high { background: var(--high); }
+.priority-med { background: var(--med); }
+.priority-low { background: var(--low); }
+
+.task-actions { display: flex; flex-direction: column; gap: 4px; }
+.task-action-btn { width: 26px; height: 26px; border-radius: 6px; background: var(--surface3); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 12px; cursor: pointer; color: var(--text3); transition: all 0.15s; }
+.task-action-btn:active { transform: scale(0.88); }
+
+.add-task-btn {
+  display: flex; align-items: center; gap: 8px;
+  padding: 9px 10px;
+  margin: 4px 0;
+  border-radius: var(--radius-sm);
+  border: 1px dashed var(--border2);
+  background: transparent;
+  color: var(--text3);
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+  width: 100%;
+  font-family: var(--font-body);
+}
+.add-task-btn:active { background: var(--surface3); color: var(--text2); }
+
+/* ── ANALYTICS PAGE ── */
+.analytics-section { margin: 12px 0; }
+.analytics-section-title { font-family: var(--font-display); font-size: 13px; font-weight: 700; color: var(--text3); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; }
+.subject-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px; margin-bottom: 8px; }
+.subject-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+.subject-name { font-family: var(--font-display); font-size: 15px; font-weight: 700; }
+.subject-exam { font-size: 12px; color: var(--text3); }
+.subject-pct { font-family: var(--font-display); font-size: 20px; font-weight: 800; }
+.subject-bar-track { height: 6px; background: var(--surface3); border-radius: 10px; overflow: hidden; }
+.subject-bar-fill { height: 100%; border-radius: 10px; transition: width 0.5s ease; }
+.subject-stats { display: flex; gap: 10px; margin-top: 10px; }
+.subject-stat { flex: 1; }
+.subject-stat-val { font-family: var(--font-display); font-size: 14px; font-weight: 700; }
+.subject-stat-lbl { font-size: 11px; color: var(--text3); }
+
+.heatmap-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+.heatmap-cell { aspect-ratio: 1; border-radius: 4px; background: var(--surface2); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 9px; color: var(--text3); cursor: pointer; transition: all 0.2s; position: relative; }
+.heatmap-cell.level-1 { background: rgba(124,111,205,0.2); }
+.heatmap-cell.level-2 { background: rgba(124,111,205,0.4); }
+.heatmap-cell.level-3 { background: rgba(124,111,205,0.65); }
+.heatmap-cell.level-4 { background: rgba(124,111,205,0.85); }
+.heatmap-cell.today-cell { border-color: var(--accent2); }
+
+/* ── INSIGHTS ── */
+.insight-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px; margin-bottom: 8px; display: flex; gap: 12px; align-items: flex-start; }
+.insight-icon { font-size: 22px; min-width: 30px; }
+.insight-title { font-family: var(--font-display); font-size: 14px; font-weight: 700; margin-bottom: 3px; }
+.insight-desc { font-size: 13px; color: var(--text2); line-height: 1.4; }
+
+/* ── FLOATING ACTION ── */
+.fab {
+  position: fixed;
+  bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+  right: 20px;
+  width: 56px; height: 56px;
+  border-radius: 18px;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  border: none;
+  color: white;
+  font-size: 26px;
+  cursor: pointer;
+  box-shadow: 0 8px 24px var(--accent-glow), 0 4px 12px rgba(0,0,0,0.4);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 200;
+  transition: all 0.25s;
+  line-height: 1;
+}
+.fab:active { transform: scale(0.9); }
+
+/* ── MODAL ── */
+.modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.7);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 300;
+  display: none;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 0;
+}
+.modal-overlay.open { display: flex; }
+.modal {
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: 24px 24px 0 0;
+  width: 100%;
+  max-width: 480px;
+  padding: 20px 20px calc(20px + env(safe-area-inset-bottom, 0px));
+  max-height: 90vh;
+  overflow-y: auto;
+  animation: slideUp 0.3s ease;
+}
+@keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+.modal-handle { width: 40px; height: 4px; background: var(--surface3); border-radius: 2px; margin: 0 auto 18px; }
+.modal-title { font-family: var(--font-display); font-size: 20px; font-weight: 800; margin-bottom: 20px; }
+.form-group { margin-bottom: 14px; }
+.form-label { font-size: 12px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 6px; display: block; }
+.form-input, .form-select, .form-textarea {
+  width: 100%;
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 15px;
+  padding: 11px 12px;
+  outline: none;
+  transition: border-color 0.2s;
+  -webkit-appearance: none;
+}
+.form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--accent); }
+.form-textarea { min-height: 80px; resize: none; }
+.form-row { display: flex; gap: 10px; }
+.form-row .form-group { flex: 1; }
+
+.priority-btns { display: flex; gap: 6px; }
+.priority-btn { flex: 1; padding: 9px; border-radius: var(--radius-sm); border: 1px solid var(--border2); background: var(--surface2); color: var(--text2); font-size: 12px; font-weight: 600; cursor: pointer; text-align: center; transition: all 0.2s; font-family: var(--font-body); }
+.priority-btn.selected-high { background: rgba(224,90,90,0.15); border-color: var(--high); color: var(--high); }
+.priority-btn.selected-med { background: rgba(224,180,90,0.15); border-color: var(--med); color: var(--med); }
+.priority-btn.selected-low { background: rgba(90,224,124,0.15); border-color: var(--low); color: var(--low); }
+
+.btn-primary {
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  border: none;
+  border-radius: var(--radius);
+  color: white;
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 8px;
+  transition: all 0.2s;
+}
+.btn-primary:active { transform: scale(0.97); }
+.btn-secondary { background: var(--surface2); border: 1px solid var(--border2); color: var(--text2); }
+.btn-danger { background: rgba(224,90,90,0.15); border: 1px solid rgba(224,90,90,0.3); color: #e07a7a; }
+
+/* mini svg circle */
+.mini-circle { transform: rotate(-90deg); }
+
+/* ── EMPTY DAY ── */
+.empty-day-msg { text-align: center; padding: 20px; color: var(--text3); font-size: 13px; }
+
+/* ── TODAY JUMP ── */
+.today-jump { display: flex; align-items: center; justify-content: center; padding: 10px; }
+.today-jump-btn { background: var(--surface2); border: 1px solid var(--border2); border-radius: 20px; padding: 8px 18px; font-size: 13px; font-weight: 600; color: var(--accent2); cursor: pointer; display: flex; align-items: center; gap: 6px; font-family: var(--font-display); }
+
+/* ── CONTEXT MENU ── */
+.ctx-menu { position: fixed; background: var(--surface2); border: 1px solid var(--border2); border-radius: var(--radius); padding: 6px; z-index: 400; min-width: 160px; box-shadow: var(--shadow); display: none; }
+.ctx-menu.open { display: block; }
+.ctx-item { padding: 10px 12px; border-radius: var(--radius-sm); font-size: 14px; cursor: pointer; display: flex; align-items: center; gap: 8px; color: var(--text2); transition: background 0.15s; }
+.ctx-item:hover, .ctx-item:active { background: var(--surface3); color: var(--text); }
+.ctx-item.danger { color: #e07a7a; }
+
+/* ── EXPORT/IMPORT ── */
+.import-export-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 12px; }
+.ie-btn { background: var(--surface2); border: 1px solid var(--border2); border-radius: var(--radius); padding: 16px 10px; text-align: center; cursor: pointer; transition: all 0.2s; }
+.ie-btn:active { transform: scale(0.95); }
+.ie-icon { font-size: 28px; margin-bottom: 6px; }
+.ie-label { font-family: var(--font-display); font-size: 13px; font-weight: 700; color: var(--text); }
+.ie-desc { font-size: 11px; color: var(--text3); margin-top: 2px; }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--surface3); border-radius: 10px; }
+
+/* Drag */
+.task-block.dragging { opacity: 0.5; cursor: grabbing; }
+.day-tasks.drag-over { background: var(--accent-glow); border-radius: var(--radius-sm); }
+
+.section-page { padding: 14px 0 0; }
+.page-section-title { font-family: var(--font-display); font-size: 22px; font-weight: 800; margin-bottom: 4px; padding: 0 4px; }
+.page-section-sub { font-size: 13px; color: var(--text3); padding: 0 4px; margin-bottom: 4px; }
+
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar" id="topbar">
+  <div class="topbar-inner">
+    <div class="topbar-row1">
+      <span class="app-title">Finals Planner</span>
+      <div class="topbar-actions">
+        <div class="icon-btn" onclick="showTab('analytics')" title="Analytics">📊</div>
+        <div class="icon-btn" onclick="openImportExport()" title="Import/Export">⚙️</div>
+      </div>
+    </div>
+    <div class="progress-section">
+      <div class="progress-row">
+        <span class="progress-label">Overall Progress</span>
+        <span class="progress-val" id="overall-pct">0%</span>
+      </div>
+      <div class="progress-bar-track">
+        <div class="progress-bar-fill" id="overall-bar" style="width:0%"></div>
+      </div>
+    </div>
+    <div class="stats-row">
+      <div class="stat-pill streak">
+        <span class="stat-num" id="stat-streak">0</span>
+        <span class="stat-lbl">🔥 Streak</span>
+      </div>
+      <div class="stat-pill hours">
+        <span class="stat-num" id="stat-hours">0h</span>
+        <span class="stat-lbl">⏱ Studied</span>
+      </div>
+      <div class="stat-pill score">
+        <span class="stat-num" id="stat-score">—</span>
+        <span class="stat-lbl">⚡ Score</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TABS -->
+<div class="tabs" id="tabs">
+  <div class="tab active" onclick="showTab('schedule')" data-tab="schedule">Schedule</div>
+  <div class="tab" onclick="showTab('today')" data-tab="today">Today</div>
+  <div class="tab" onclick="showTab('analytics')" data-tab="analytics">Analytics</div>
+  <div class="tab" onclick="showTab('settings')" data-tab="settings">Settings</div>
+</div>
+
+<!-- SCHEDULE PAGE -->
+<div class="page active section-page" id="page-schedule">
+  <p class="page-section-title">Study Schedule</p>
+  <p class="page-section-sub">May 24 → June 10, 2025</p>
+  <div class="today-jump">
+    <div class="today-jump-btn" onclick="jumpToToday()">📍 Jump to Today</div>
+  </div>
+  <div id="days-container"></div>
+</div>
+
+<!-- TODAY PAGE -->
+<div class="page section-page" id="page-today">
+  <p class="page-section-title">Today</p>
+  <p class="page-section-sub" id="today-subtitle"></p>
+  <div id="today-container"></div>
+</div>
+
+<!-- ANALYTICS PAGE -->
+<div class="page section-page" id="page-analytics">
+  <p class="page-section-title">Analytics</p>
+  <p class="page-section-sub">Your progress overview</p>
+  <div id="analytics-container"></div>
+</div>
+
+<!-- SETTINGS PAGE -->
+<div class="page section-page" id="page-settings">
+  <p class="page-section-title">Settings</p>
+  <p class="page-section-sub">Manage your planner</p>
+  <div class="import-export-grid">
+    <div class="ie-btn" onclick="exportData()">
+      <div class="ie-icon">📤</div>
+      <div class="ie-label">Export</div>
+      <div class="ie-desc">Save as JSON</div>
+    </div>
+    <div class="ie-btn" onclick="triggerImport()">
+      <div class="ie-icon">📥</div>
+      <div class="ie-label">Import</div>
+      <div class="ie-desc">Load from JSON</div>
+    </div>
+    <div class="ie-btn" onclick="collapseAll()">
+      <div class="ie-icon">🔼</div>
+      <div class="ie-label">Collapse All</div>
+      <div class="ie-desc">Hide all days</div>
+    </div>
+    <div class="ie-btn" onclick="expandAll()">
+      <div class="ie-icon">🔽</div>
+      <div class="ie-label">Expand All</div>
+      <div class="ie-desc">Show all days</div>
+    </div>
+    <div class="ie-btn" onclick="resetProgress()">
+      <div class="ie-icon">🔄</div>
+      <div class="ie-label">Reset Progress</div>
+      <div class="ie-desc">Clear checkboxes</div>
+    </div>
+    <div class="ie-btn" onclick="resetAll()">
+      <div class="ie-icon">🗑️</div>
+      <div class="ie-label">Reset All</div>
+      <div class="ie-desc">Restore defaults</div>
+    </div>
+  </div>
+  <div style="margin-top:20px; padding:14px; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius);">
+    <div style="font-family:var(--font-display); font-weight:700; margin-bottom:8px;">Legend</div>
+    <div style="display:flex; flex-direction:column; gap:6px;">
+      <div style="display:flex; align-items:center; gap:8px;"><div style="width:12px;height:12px;border-radius:3px;background:var(--mech306)"></div><span style="font-size:13px;">MECH306 — Manufacturing Processes</span></div>
+      <div style="display:flex; align-items:center; gap:8px;"><div style="width:12px;height:12px;border-radius:3px;background:var(--mech302)"></div><span style="font-size:13px;">MECH302 — Heat Transfer</span></div>
+      <div style="display:flex; align-items:center; gap:8px;"><div style="width:12px;height:12px;border-radius:3px;background:var(--mech304)"></div><span style="font-size:13px;">MECH304 — Control</span></div>
+      <div style="display:flex; align-items:center; gap:8px;"><div style="width:12px;height:12px;border-radius:3px;background:var(--brisa)"></div><span style="font-size:13px;">Brisa Interview Prep</span></div>
+      <div style="display:flex; align-items:center; gap:8px;"><div style="width:12px;height:12px;border-radius:3px;background:var(--sport)"></div><span style="font-size:13px;">Sports / Workout</span></div>
+      <div style="display:flex; align-items:center; gap:8px;"><div style="width:12px;height:12px;border-radius:3px;background:var(--free)"></div><span style="font-size:13px;">Free Time / Personal</span></div>
+    </div>
+  </div>
+  <input type="file" id="import-file" accept=".json" style="display:none" onchange="importData(event)">
+</div>
+
+<!-- FAB -->
+<button class="fab" onclick="openAddTaskModal()">+</button>
+
+<!-- ADD TASK MODAL -->
+<div class="modal-overlay" id="add-modal">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="modal-title">Add Task</div>
+    <div class="form-group">
+      <label class="form-label">Task Title</label>
+      <input class="form-input" id="task-title-input" placeholder="e.g. Study Chapter 5" type="text">
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Day</label>
+        <select class="form-select" id="task-day-select"></select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Type</label>
+        <select class="form-select" id="task-type-select">
+          <option value="mech306">MECH306</option>
+          <option value="mech302">MECH302</option>
+          <option value="mech304">MECH304</option>
+          <option value="brisa">Brisa Prep</option>
+          <option value="sport">Sport</option>
+          <option value="free">Free Time</option>
+          <option value="custom">Custom</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Start Time</label>
+        <input class="form-input" id="task-start" type="time" value="09:00">
+      </div>
+      <div class="form-group">
+        <label class="form-label">End Time</label>
+        <input class="form-input" id="task-end" type="time" value="10:00">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Description</label>
+      <textarea class="form-textarea" id="task-desc-input" placeholder="Optional details..."></textarea>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Priority</label>
+      <div class="priority-btns">
+        <button class="priority-btn selected-high" onclick="selectPriority('high',this)">🔴 High</button>
+        <button class="priority-btn" onclick="selectPriority('med',this)">🟡 Med</button>
+        <button class="priority-btn" onclick="selectPriority('low',this)">🟢 Low</button>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Study Hours (if applicable)</label>
+      <input class="form-input" id="task-hours" type="number" min="0" max="8" step="0.5" placeholder="e.g. 1.5">
+    </div>
+    <button class="btn-primary" onclick="saveTask()">Save Task</button>
+    <button class="btn-primary btn-secondary" style="margin-top:8px" onclick="closeModal()">Cancel</button>
+  </div>
+</div>
+
+<!-- EDIT MODAL (reuses add modal, hidden edit id) -->
+<input type="hidden" id="edit-task-id">
+<input type="hidden" id="edit-task-day">
+
+<!-- CONTEXT MENU -->
+<div class="ctx-menu" id="ctx-menu">
+  <div class="ctx-item" onclick="ctxEdit()">✏️ Edit</div>
+  <div class="ctx-item" onclick="ctxToggle()">✅ Toggle Done</div>
+  <div class="ctx-item danger" onclick="ctxDelete()">🗑️ Delete</div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════
+// DATA — SCHEDULE
+// ═══════════════════════════════════════════════
+
+const PLAN_DATA = [
+  {
+    date: '2025-05-24', // Saturday
+    badges: [],
+    tasks: [
+      { id: 's1', time: '08:00–09:30', title: 'Morning Run', desc: 'Easy 5–7km, fresh start to study season', type: 'sport', priority: 'med', hours: 0 },
+      { id: 's2', time: '09:30–11:00', title: 'Conditioning Workout', desc: 'Strength/mobility circuit', type: 'sport', priority: 'med', hours: 0 },
+      { id: 's3', time: '11:30–13:00', title: 'MECH306 — Ch.0–2 Overview', desc: 'Intro to manufacturing, basic processes, materials classification', type: 'mech306', priority: 'high', hours: 1.5 },
+      { id: 's4', time: '14:00–15:00', title: 'MECH306 — Ch.3–4 Casting', desc: 'Sand casting, die casting fundamentals', type: 'mech306', priority: 'high', hours: 1 },
+      { id: 's5', time: '15:30–16:30', title: 'Brisa Interview Prep — Research', desc: 'Research Brisa Bridgestone company, products, culture, career page', type: 'brisa', priority: 'high', hours: 1 },
+      { id: 's6', time: '17:00–19:00', title: 'Free Time', desc: 'Relax, walk, social media, whatever you like', type: 'free', priority: 'low', hours: 0 },
+    ]
+  },
+  {
+    date: '2025-05-25', // Sunday
+    badges: [],
+    tasks: [
+      { id: 's7', time: '08:00–09:30', title: 'Morning Run', desc: 'Easy pace', type: 'sport', priority: 'med', hours: 0 },
+      { id: 's8', time: '09:30–11:00', title: 'Conditioning Workout', desc: 'Core + upper body', type: 'sport', priority: 'med', hours: 0 },
+      { id: 's9', time: '11:30–13:00', title: 'MECH306 — Ch.5–6 Forming', desc: 'Rolling, forging, extrusion processes', type: 'mech306', priority: 'high', hours: 1.5 },
+      { id: 's10', time: '14:00–15:00', title: 'MECH306 — Ch.7–8 Sheet Metal', desc: 'Blanking, bending, deep drawing', type: 'mech306', priority: 'high', hours: 1 },
+      { id: 's11', time: '15:30–16:30', title: 'Brisa Interview Prep — Q&A Practice', desc: 'Prepare answers for common mechanical engineering interview questions', type: 'brisa', priority: 'high', hours: 1 },
+      { id: 's12', time: '17:00–19:00', title: 'Free Time', desc: 'Rest well', type: 'free', priority: 'low', hours: 0 },
+    ]
+  },
+  {
+    date: '2025-05-26', // Monday
+    badges: [],
+    tasks: [
+      { id: 's13', time: '08:00–09:30', title: 'Morning Run', desc: 'Moderate pace, ~6km', type: 'sport', priority: 'med', hours: 0 },
+      { id: 's14', time: '09:30–11:00', title: 'Conditioning Workout', desc: 'Full-body functional', type: 'sport', priority: 'med', hours: 0 },
+      { id: 's15', time: '11:30–13:00', title: 'MECH306 — Ch.9–11 Machining I', desc: 'Turning, milling, drilling operations', type: 'mech306', priority: 'high', hours: 1.5 },
+      { id: 's16', time: '14:00–15:30', title: 'MECH302 — Ch.3 Steady-State Conduction', desc: 'Heat equation, Fourier law, boundary conditions', type: 'mech302', priority: 'high', hours: 1.5 },
+      { id: 's17', time: '16:00–17:00', title: 'Brisa Prep — Mock Interview', desc: 'Practice speaking out loud, technical + behavioral', type: 'brisa', priority: 'high', hours: 1 },
+      { id: 's18', time: '17:30–19:30', title: 'Free Block', desc: 'Flexible — meetings, plans, or rest', type: 'free', priority: 'low', hours: 0 },
+    ]
+  },
+  {
+    date: '2025-05-27', // Tuesday — family visit
+    badges: [{ label: 'Family Visit', cls: 'badge-family' }],
+    tasks: [
+      { id: 's19', time: '08:00–09:30', title: 'Morning Run', desc: 'Light jog — keep it short', type: 'sport', priority: 'low', hours: 0 },
+      { id: 's20', time: '09:30–10:30', title: 'Light Conditioning', desc: 'Short mobility/stretching session', type: 'sport', priority: 'low', hours: 0 },
+      { id: 's21', time: '11:00–12:00', title: 'Quick MECH306 Review', desc: 'Skim notes from Ch.0–11, light reading only', type: 'mech306', priority: 'low', hours: 1 },
+      { id: 's22', time: '12:00–21:00', title: 'Family / Relative Visit', desc: 'Enjoy time with family — no study pressure', type: 'free', priority: 'low', hours: 0 },
+    ]
+  },
+  {
+    date: '2025-05-28', // Wednesday — family visit
+    badges: [{ label: 'Family Visit', cls: 'badge-family' }],
+    tasks: [
+      { id: 's23', time: '08:00–09:30', title: 'Morning Run', desc: 'Easy recovery run', type: 'sport', priority: 'low', hours: 0 },
+      { id: 's24', time: '09:30–10:30', title: 'Light Conditioning', desc: 'Core + stretching', type: 'sport', priority: 'low', hours: 0 },
+      { id: 's25', time: '11:00–12:00', title: 'MECH302 — Ch.5 Quick Read', desc: 'Transient conduction overview, Biot number', type: 'mech302', priority: 'low', hours: 1 },
+      { id: 's26', time: '12:00–21:00', title: 'Family / Relative Visit', desc: 'Rest and enjoy', type: 'free', priority: 'low', hours: 0 },
+    ]
+  },
+  {
+    date: '2025-05-29', // Thursday
+    badges: [],
+    tasks: [
+      { id: 's27', time: '08:00–09:30', title: 'Morning Run', desc: 'Back to regular training', type: 'sport', priority: 'med', hours: 0 },
+      { id: 's28', time: '09:30–11:00', title: 'Conditioning Workout', desc: 'Strength session', type: 'sport', priority: 'med', hours: 0 },
+      { id: 's29', time: '11:30–13:30', title: 'MECH306 — Ch.13–15 Machining II', desc: 'Cutting tools, tool wear, surface finish', type: 'mech306', priority: 'high', hours: 2 },
+      { id: 's30', time: '14:30–16:00', title: 'MECH302 — Ch.6 Transient Conduction', desc: 'Lumped system, charts, semi-infinite solids', type: 'mech302', priority: 'high', hours: 1.5 },
+      { id: 's31', time: '16:30–17:30', title: 'Brisa Prep — Final Review', desc: 'Review notes, company info, prepare questions to ask', type: 'brisa', priority: 'high', hours: 1 },
+      { id: 's32', time: '18:00–20:00', title: 'Free Time / Rest', desc: 'Relax before Eskişehir trip tomorrow', type: 'free', priority: 'low', hours: 0 },
+    ]
+  },
+  {
+    date: '2025-05-30', // Friday — ESKIŞEHIR
+    badges: [{ label: 'Eskişehir Trip', cls: 'badge-trip' }],
+    tasks: [
+      { id: 's33', time: 'All Day', title: '✈️ Eskişehir Trip', desc: 'Travel & explore — NO studying. Full rest and fun.', type: 'free', priority: 'low', hours: 0 },
+    ]
+  },
+  {
+    date: '2025-05-31', // Saturday — ESKIŞEHIR
+    badges: [{ label: 'Eskişehir Trip', cls: 'badge-trip' }],
+    tasks: [
+      { id: 's34', time: 'All Day', title: '🏙️ Eskişehir Trip Day 2', desc: 'Enjoy the city, rest completely', type: 'free', priority: 'low', hours: 0 },
+    ]
+  },
+  {
+    date: '2025-06-01', // Sunday — INTERVIEW + return from trip
+    badges: [{ label: 'Brisa Interview', cls: 'badge-interview' }],
+    tasks: [
+      { id: 's35', time: 'Morning', title: '🚗 Return from Eskişehir', desc: 'Travel back, settle in', type: 'free', priority: 'low', hours: 0 },
+      { id: 's36', time: 'Scheduled', title: '🎯 BRISA INTERVIEW', desc: 'Brisa Bridgestone — be confident, prepared, and yourself!', type: 'brisa', priority: 'high', hours: 0 },
+      { id: 's37', time: 'Evening', title: 'Rest & Recovery', desc: 'Good sleep before exam week begins', type: 'free', priority: 'low', hours: 0 },
+    ]
+  },
+  {
+    date: '2025-06-02', // Monday — 3 days to MECH306
+    badges: [],
+    tasks: [
+      { id: 's38', time: '08:00–09:30', title: 'Morning Run', desc: 'Back in full study mode', type: 'sport', priority: 'med', hours: 0 },
+      { id: 's39', time: '09:30–11:00', title: 'Conditioning Workout', desc: 'Energy boost for exam week', type: 'sport', priority: 'med', hours: 0 },
+      { id: 's40', time: '11:30–13:30', title: 'MECH306 — Ch.16–18 NC/CNC Intro', desc: 'CNC codes, G & M codes, coordinate systems', type: 'mech306', priority: 'high', hours: 2 },
+      { id: 's41', time: '14:30–16:00', title: 'MECH306 — Ch.19–21 Advanced Machining', desc: 'EDM, laser, ultrasonic, chemical machining', type: 'mech306', priority: 'high', hours: 1.5 },
+      { id: 's42', time: '16:30–17:30', title: 'Free Block', desc: 'Walk, snack, fresh air', type: 'free', priority: 'low', hours: 0 },
+      { id: 's43', time: '18:00–19:30', title: 'MECH302 — Ch.7 External Convection', desc: 'Boundary layer, flat plate, cylinder correlations', type: 'mech302', priority: 'high', hours: 1.5 },
+    ]
+  },
+  {
+    date: '2025-06-03', // Tuesday — 2 days to MECH306
+    badges: [],
+    tasks: [
+      { id: 's44', time: '08:00–09:30', title: 'Morning Run', desc: 'Energize for heavy study day', type: 'sport', priority: 'med', hours: 0 },
+      { id: 's45', time: '09:30–11:00', title: 'Conditioning Workout', desc: 'Keep it moving', type: 'sport', priority: 'med', hours: 0 },
+      { id: 's46', time: '11:30–13:30', title: 'MECH306 — Ch.22–24 Welding & Joining', desc: 'Arc welding, MIG, TIG, resistance welding, brazing', type: 'mech306', priority: 'high', hours: 2 },
+      { id: 's47', time: '14:30–16:00', title: 'MECH306 — Ch.33 & 35 Surface + Quality', desc: 'Surface finish, tolerances, quality control, metrology', type: 'mech306', priority: 'high', hours: 1.5 },
+      { id: 's48', time: '16:30–17:30', title: 'Free Block', desc: 'Rest, snack, recharge', type: 'free', priority: 'low', hours: 0 },
+      { id: 's49', time: '18:00–19:30', title: 'MECH306 — CNC Coding Practice', desc: 'Write and trace CNC programs, practice G/M codes', type: 'mech306', priority: 'high', hours: 1.5 },
+    ]
+  },
+  {
+    date: '2025-06-04', // Wednesday — MECH306 eve
+    badges: [{ label: 'Exam Tomorrow', cls: 'badge-exam' }],
+    tasks: [
+      { id: 's50', time: '08:00–09:30', title: 'Morning Run', desc: 'Light pace — calm the nerves', type: 'sport', priority: 'med', hours: 0 },
+      { id: 's51', time: '09:30–10:30', title: 'Light Conditioning', desc: 'Keep blood flowing, not tiring', type: 'sport', priority: 'low', hours: 0 },
+      { id: 's52', time: '11:00–12:30', title: 'MECH306 — Full Revision Part I', desc: 'Quick scan: Ch.0–11, formulas, key concepts', type: 'mech306', priority: 'high', hours: 1.5 },
+      { id: 's53', time: '14:00–15:30', title: 'MECH306 — Full Revision Part II', desc: 'Ch.13–24, CNC, Ch.33&35 — flash cards, summaries', type: 'mech306', priority: 'high', hours: 1.5 },
+      { id: 's54', time: '16:00–17:00', title: 'CNC Mock Problems', desc: 'Last round of CNC code practice', type: 'mech306', priority: 'high', hours: 1 },
+      { id: 's55', time: '17:00–21:00', title: 'Free Time & Early Sleep Prep', desc: 'Stop studying. Walk, watch something light, good dinner, sleep early.', type: 'free', priority: 'low', hours: 0 },
+    ]
+  },
+  {
+    date: '2025-06-05', // Thursday — MECH306 EXAM
+    badges: [{ label: 'EXAM DAY', cls: 'badge-exam' }],
+    tasks: [
+      { id: 's56', time: '08:00–09:00', title: 'Morning Run', desc: 'Short easy run to calm mind', type: 'sport', priority: 'low', hours: 0 },
+      { id: 's57', time: '09:00–10:00', title: 'Light Review', desc: 'Only formulas sheet, no new content', type: 'mech306', priority: 'med', hours: 0.5 },
+      { id: 's58', time: 'Exam Time', title: '🎓 MECH306 EXAM', desc: 'Manufacturing Processes — trust your preparation!', type: 'mech306', priority: 'high', hours: 0 },
+      { id: 's59', time: 'Post-Exam', title: 'Rest & Recovery', desc: 'You did it. Eat well, relax, do not check answers.', type: 'free', priority: 'low', hours: 0 },
+      { id: 's60', time: 'Evening', title: 'MECH302 — Ch.8 Internal Flow Intro', desc: 'Light start on next subject: flow regimes, entry length', type: 'mech302', priority: 'med', hours: 1 },
+    ]
+  },
+  {
+    date: '2025-06-06', // Friday
+    badges: [],
+    tasks: [
+      { id: 's61', time: '08:00–09:30', title: 'Morning Run', desc: 'Post-exam recovery run', type: 'sport', priority: 'med', hours: 0 },
+      { id: 's62', time: '09:30–11:00', title: 'Conditioning Workout', desc: 'Full workout, feel good', type: 'sport', priority: 'med', hours: 0 },
+      { id: 's63', time: '11:30–13:30', title: 'MECH302 — Ch.8 Internal Convection', desc: 'Nusselt correlations, fully developed flow, pipe problems', type: 'mech302', priority: 'high', hours: 2 },
+      { id: 's64', time: '14:30–15:30', title: 'MECH304 — Ch.5 Laplace & Transfer Functions', desc: 'Review TF, poles/zeros, block diagrams', type: 'mech304', priority: 'high', hours: 1 },
+      { id: 's65', time: '16:00–18:00', title: 'Free Block', desc: 'Flexible — plans may appear, rest, explore', type: 'free', priority: 'low', hours: 0 },
+    ]
+  },
+  {
+    date: '2025-06-07', // Saturday
+    badges: [],
+    tasks: [
+      { id: 's66', time: '08:00–09:30', title: 'Morning Run', desc: 'Energizing weekend run', type: 'sport', priority: 'med', hours: 0 },
+      { id: 's67', time: '09:30–11:00', title: 'Conditioning Workout', desc: 'Weekend strength session', type: 'sport', priority: 'med', hours: 0 },
+      { id: 's68', time: '11:30–13:30', title: 'MECH302 — Ch.9 Free Convection', desc: 'Buoyancy, vertical/horizontal surfaces, Rayleigh correlations', type: 'mech302', priority: 'high', hours: 2 },
+      { id: 's69', time: '14:30–16:00', title: 'MECH304 — Ch.6 Transient Response', desc: 'First/second order systems, step response, time constants', type: 'mech304', priority: 'high', hours: 1.5 },
+      { id: 's70', time: '16:30–18:30', title: 'Free Block', desc: 'Relax, go out, enjoy the weekend', type: 'free', priority: 'low', hours: 0 },
+    ]
+  },
+  {
+    date: '2025-06-08', // Sunday — MECH302 eve
+    badges: [{ label: 'Exam Tomorrow', cls: 'badge-exam' }],
+    tasks: [
+      { id: 's71', time: '08:00–09:30', title: 'Morning Run', desc: 'Gentle pre-exam run', type: 'sport', priority: 'med', hours: 0 },
+      { id: 's72', time: '09:30–10:30', title: 'Light Conditioning', desc: 'Short, not tiring', type: 'sport', priority: 'low', hours: 0 },
+      { id: 's73', time: '11:00–12:30', title: 'MECH302 — Ch.11 Radiation', desc: 'Emissivity, Stefan-Boltzmann, view factors, grey surfaces', type: 'mech302', priority: 'high', hours: 1.5 },
+      { id: 's74', time: '14:00–15:30', title: 'MECH302 — Full Revision', desc: 'Ch.3,5,6,7,8,9,11 — key formulas, typical problems', type: 'mech302', priority: 'high', hours: 1.5 },
+      { id: 's75', time: '16:00–17:00', title: 'Practice Problems', desc: 'Solve 4–5 mixed heat transfer problems', type: 'mech302', priority: 'high', hours: 1 },
+      { id: 's76', time: '17:00–21:00', title: 'Rest & Sleep Early', desc: 'Done studying. Eat well, sleep 8h.', type: 'free', priority: 'low', hours: 0 },
+    ]
+  },
+  {
+    date: '2025-06-09', // Monday — MECH302 EXAM
+    badges: [{ label: 'EXAM DAY', cls: 'badge-exam' }],
+    tasks: [
+      { id: 's77', time: '08:00–09:00', title: 'Morning Run', desc: 'Short calm run', type: 'sport', priority: 'low', hours: 0 },
+      { id: 's78', time: '09:00–10:00', title: 'Light Review', desc: 'Formula sheet only, confidence boost', type: 'mech302', priority: 'med', hours: 0.5 },
+      { id: 's79', time: 'Exam Time', title: '🎓 MECH302 EXAM', desc: 'Heat Transfer — stay calm, trust your work!', type: 'mech302', priority: 'high', hours: 0 },
+      { id: 's80', time: 'Post-Exam', title: 'Recovery', desc: 'Breathe. One more exam left.', type: 'free', priority: 'low', hours: 0 },
+      { id: 's81', time: 'Evening', title: 'MECH304 — Ch.7 Frequency Response', desc: 'Bode plots, gain/phase margin, stability', type: 'mech304', priority: 'high', hours: 1.5 },
+    ]
+  },
+  {
+    date: '2025-06-10', // Tuesday — MECH304 EXAM 🏆
+    badges: [{ label: 'FINAL EXAM', cls: 'badge-exam' }],
+    tasks: [
+      { id: 's82', time: '08:00–09:00', title: 'Morning Run', desc: 'Last exam day run — you\'ve got this!', type: 'sport', priority: 'low', hours: 0 },
+      { id: 's83', time: '09:00–10:30', title: 'MECH304 — Final Revision', desc: 'Ch.5–8: TF, response, frequency, Ch.8 PID/root locus', type: 'mech304', priority: 'high', hours: 1.5 },
+      { id: 's84', time: 'Exam Time', title: '🏆 MECH304 EXAM', desc: 'Control Systems — finals are DONE after this!', type: 'mech304', priority: 'high', hours: 0 },
+      { id: 's85', time: 'Post-Exam', title: '🎉 FINALS COMPLETE!', desc: 'Celebrate! You survived and crushed it. Rest, party, whatever you want!', type: 'free', priority: 'low', hours: 0 },
+    ]
+  },
+];
+
+// ═══════════════════════════════════════════════
+// STATE & STORAGE
+// ═══════════════════════════════════════════════
+
+let state = {
+  tasks: {}, // dayDate -> array of task objects
+  done: {},  // taskId -> bool
+  collapsed: {}, // dayDate -> bool
+  customTaskCounter: 1000,
+};
+
+function loadState() {
+  try {
+    const saved = localStorage.getItem('finals-planner-v2');
+    if (saved) {
+      const s = JSON.parse(saved);
+      state.done = s.done || {};
+      state.tasks = s.tasks || {};
+      state.customTaskCounter = s.customTaskCounter || 1000;
+      state.collapsed = s.collapsed || {};
+    }
+  } catch(e) {}
+  // Merge PLAN_DATA into state.tasks if not already there
+  PLAN_DATA.forEach(day => {
+    if (!state.tasks[day.date]) {
+      state.tasks[day.date] = JSON.parse(JSON.stringify(day.tasks));
+    }
+  });
+}
+
+function saveState() {
+  localStorage.setItem('finals-planner-v2', JSON.stringify({
+    done: state.done,
+    tasks: state.tasks,
+    customTaskCounter: state.customTaskCounter,
+    collapsed: state.collapsed,
+  }));
+}
+
+function getToday() {
+  const n = new Date();
+  return `${n.getFullYear()}-${String(n.getMonth()+1).padStart(2,'0')}-${String(n.getDate()).padStart(2,'0')}`;
+}
+
+function getDayInfo(dateStr) {
+  return PLAN_DATA.find(d => d.date === dateStr) || { date: dateStr, badges: [], tasks: [] };
+}
+
+function formatDate(dateStr) {
+  const d = new Date(dateStr + 'T12:00:00');
+  return d.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' });
+}
+
+function shortDate(dateStr) {
+  const d = new Date(dateStr + 'T12:00:00');
+  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+}
+
+// ═══════════════════════════════════════════════
+// ANALYTICS
+// ═══════════════════════════════════════════════
+
+function calcStats() {
+  let total = 0, done = 0, studyHours = 0;
+  const subjectDone = { mech306: 0, mech302: 0, mech304: 0 };
+  const subjectTotal = { mech306: 0, mech302: 0, mech304: 0 };
+
+  PLAN_DATA.forEach(day => {
+    const tasks = state.tasks[day.date] || [];
+    tasks.forEach(t => {
+      if (t.type === 'free') return; // don't count free time in progress
+      total++;
+      if (['mech306','mech302','mech304'].includes(t.type)) subjectTotal[t.type]++;
+      if (state.done[t.id]) {
+        done++;
+        studyHours += (t.hours || 0);
+        if (['mech306','mech302','mech304'].includes(t.type)) subjectDone[t.type]++;
+      }
+    });
+  });
+
+  // Streak
+  let streak = 0;
+  const today = getToday();
+  const allDates = PLAN_DATA.map(d => d.date).sort().reverse();
+  for (const date of allDates) {
+    if (date > today) continue;
+    const dayTasks = (state.tasks[date] || []).filter(t => t.type !== 'free');
+    if (dayTasks.length === 0) break;
+    const allDone = dayTasks.every(t => state.done[t.id]);
+    if (allDone) streak++;
+    else break;
+  }
+
+  // Score
+  const pct = total > 0 ? Math.round((done/total)*100) : 0;
+  const score = pct === 0 ? '—' : pct < 30 ? 'D' : pct < 50 ? 'C' : pct < 70 ? 'B' : pct < 90 ? 'A' : 'S';
+
+  return { total, done, pct, studyHours, streak, score, subjectDone, subjectTotal };
+}
+
+function updateTopBar() {
+  const s = calcStats();
+  document.getElementById('overall-pct').textContent = s.pct + '%';
+  document.getElementById('overall-bar').style.width = s.pct + '%';
+  document.getElementById('stat-streak').textContent = s.streak;
+  document.getElementById('stat-hours').textContent = Math.round(s.studyHours) + 'h';
+  document.getElementById('stat-score').textContent = s.score;
+}
+
+// ═══════════════════════════════════════════════
+// RENDER HELPERS
+// ═══════════════════════════════════════════════
+
+function miniCircle(pct, color) {
+  const r = 14, c = 18, stroke = 3;
+  const circ = 2 * Math.PI * r;
+  const dash = (pct/100) * circ;
+  return `<svg width="36" height="36" class="mini-circle" viewBox="0 0 36 36">
+    <circle cx="${c}" cy="${c}" r="${r}" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="${stroke}"/>
+    <circle cx="${c}" cy="${c}" r="${r}" fill="none" stroke="${color}" stroke-width="${stroke}" stroke-dasharray="${dash} ${circ}" stroke-linecap="round"/>
+  </svg>`;
+}
+
+function renderTask(task, dayDate) {
+  const done = !!state.done[task.id];
+  const priorityClass = `priority-${task.priority}`;
+  return `<div class="task-block ${task.type} ${done?'done':''}" 
+    id="task-${task.id}" 
+    draggable="true"
+    ondragstart="dragStart(event,'${task.id}','${dayDate}')"
+    oncontextmenu="showCtx(event,'${task.id}','${dayDate}')">
+    <div class="task-check" onclick="toggleTask('${task.id}','${dayDate}',event)">
+      <span class="task-check-icon">✓</span>
+    </div>
+    <div class="task-body">
+      <div class="task-time">${task.time || ''}</div>
+      <div class="task-title">${task.title}</div>
+      ${task.desc ? `<div class="task-desc">${task.desc}</div>` : ''}
+      <div class="task-tags">
+        <span class="task-tag tag-${task.type}">${tagLabel(task.type)}</span>
+        ${task.hours > 0 ? `<span class="task-tag" style="background:rgba(255,255,255,0.06);color:var(--text3)">⏱ ${task.hours}h</span>` : ''}
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:4px;">
+      <div class="task-priority ${priorityClass}"></div>
+      <div class="task-action-btn" onclick="openEditModal('${task.id}','${dayDate}',event)">✏️</div>
+      <div class="task-action-btn" onclick="deleteTask('${task.id}','${dayDate}',event)">🗑️</div>
+    </div>
+  </div>`;
+}
+
+function tagLabel(type) {
+  const map = { mech306:'MECH306', mech302:'MECH302', mech304:'MECH304', brisa:'Brisa', sport:'Sport', free:'Free', custom:'Custom' };
+  return map[type] || type;
+}
+
+function dayProgress(tasks) {
+  const relevant = tasks.filter(t => t.type !== 'free');
+  if (!relevant.length) return 0;
+  return Math.round((relevant.filter(t => state.done[t.id]).length / relevant.length) * 100);
+}
+
+function isOverloaded(tasks) {
+  const studyCount = tasks.filter(t => ['mech306','mech302','mech304','brisa'].includes(t.type)).length;
+  return studyCount > 4;
+}
+
+function renderDayCard(dayInfo, today) {
+  const tasks = state.tasks[dayInfo.date] || [];
+  const isToday = dayInfo.date === today;
+  const collapsed = !isToday && !!state.collapsed[dayInfo.date];
+  const pct = dayProgress(tasks);
+  const overloaded = isOverloaded(tasks);
+  const col = isToday ? 'var(--accent2)' : 'var(--text3)';
+
+  return `<div class="day-card ${isToday?'today':''} ${collapsed?'collapsed':''}" id="day-${dayInfo.date}">
+    <div class="day-header" onclick="toggleCollapse('${dayInfo.date}')">
+      <div class="day-date-block">
+        <div class="day-name">${formatDate(dayInfo.date)}</div>
+        <div class="day-date">${pct}% complete${isToday?' · Today':''}</div>
+      </div>
+      <div class="day-meta">
+        ${dayInfo.badges.map(b=>`<span class="day-badge ${b.cls}">${b.label}</span>`).join('')}
+        <div class="day-progress-mini">${miniCircle(pct, col)}</div>
+        <div class="day-chevron">▾</div>
+      </div>
+    </div>
+    <div class="day-tasks" 
+      ondragover="dragOver(event)" 
+      ondrop="dropTask(event,'${dayInfo.date}')"
+      ondragleave="dragLeave(event)">
+      ${overloaded ? `<div class="day-load-warn">⚠️ Busy day — consider spreading some tasks</div>` : ''}
+      ${tasks.map(t => renderTask(t, dayInfo.date)).join('')}
+      <button class="add-task-btn" onclick="openAddTaskModal('${dayInfo.date}')">＋ Add task</button>
+    </div>
+  </div>`;
+}
+
+// ═══════════════════════════════════════════════
+// RENDER PAGES
+// ═══════════════════════════════════════════════
+
+function renderSchedule() {
+  const today = getToday();
+  const container = document.getElementById('days-container');
+  container.innerHTML = PLAN_DATA.map(day => renderDayCard(day, today)).join('');
+}
+
+function renderToday() {
+  const today = getToday();
+  const container = document.getElementById('today-container');
+  const sub = document.getElementById('today-subtitle');
+  const day = PLAN_DATA.find(d => d.date === today);
+  if (!day) {
+    const past = PLAN_DATA[PLAN_DATA.length-1];
+    const future = PLAN_DATA[0];
+    if (today < PLAN_DATA[0].date) {
+      sub.textContent = 'Schedule starts ' + shortDate(PLAN_DATA[0].date);
+      container.innerHTML = `<div class="empty-day-msg">Your study plan hasn't started yet. Comes online ${formatDate(PLAN_DATA[0].date)} 🎯</div>`;
+    } else {
+      sub.textContent = 'Finals season complete! 🎉';
+      container.innerHTML = `<div class="empty-day-msg">All exams done! Time to rest and celebrate. 🎊</div>`;
+    }
+    return;
+  }
+  sub.textContent = formatDate(today);
+  container.innerHTML = renderDayCard(day, today);
+  // uncollapse today
+  const card = document.getElementById(`day-${today}`);
+  if (card) card.classList.remove('collapsed');
+}
+
+function renderAnalytics() {
+  const s = calcStats();
+  const today = getToday();
+  let html = '';
+
+  // Subject cards
+  html += `<div class="analytics-section"><div class="analytics-section-title">Subject Progress</div>`;
+  const subjects = [
+    { id: 'mech306', name: 'MECH306', color: 'var(--mech306)', exam: 'Jun 5', topics: 'Ch.0–24, 33, 35, CNC' },
+    { id: 'mech302', name: 'MECH302', color: 'var(--mech302)', exam: 'Jun 9', topics: 'Ch.3,5,6,7,8,9,11' },
+    { id: 'mech304', name: 'MECH304', color: 'var(--mech304)', exam: 'Jun 10', topics: 'Ch.5,6,7,8' },
+  ];
+  subjects.forEach(sub => {
+    const total = s.subjectTotal[sub.id] || 0;
+    const done = s.subjectDone[sub.id] || 0;
+    const pct = total > 0 ? Math.round((done/total)*100) : 0;
+    html += `<div class="subject-card">
+      <div class="subject-header">
+        <div>
+          <div class="subject-name" style="color:${sub.color}">${sub.name}</div>
+          <div style="font-size:11px;color:var(--text3);margin-top:2px">${sub.topics}</div>
+        </div>
+        <div style="text-align:right">
+          <div class="subject-pct" style="color:${sub.color}">${pct}%</div>
+          <div class="subject-exam">Exam: ${sub.exam}</div>
+        </div>
+      </div>
+      <div class="subject-bar-track">
+        <div class="subject-bar-fill" style="background:${sub.color};width:${pct}%"></div>
+      </div>
+      <div class="subject-stats">
+        <div class="subject-stat">
+          <div class="subject-stat-val">${done}/${total}</div>
+          <div class="subject-stat-lbl">Tasks done</div>
+        </div>
+        <div class="subject-stat">
+          <div class="subject-stat-val">${total-done}</div>
+          <div class="subject-stat-lbl">Remaining</div>
+        </div>
+      </div>
+    </div>`;
+  });
+  html += '</div>';
+
+  // Heatmap
+  html += `<div class="analytics-section"><div class="analytics-section-title">Activity Heatmap</div>
+  <div class="heatmap-grid">`;
+  PLAN_DATA.forEach(day => {
+    const tasks = state.tasks[day.date] || [];
+    const totalHours = tasks.reduce((a,t) => a+(state.done[t.id] ? (t.hours||0) : 0), 0);
+    let level = 0;
+    if (totalHours > 0) level = 1;
+    if (totalHours >= 1.5) level = 2;
+    if (totalHours >= 3) level = 3;
+    if (totalHours >= 5) level = 4;
+    const isT = day.date === today;
+    const d = new Date(day.date + 'T12:00:00');
+    html += `<div class="heatmap-cell level-${level} ${isT?'today-cell':''}" title="${shortDate(day.date)}: ${totalHours}h studied">${d.getDate()}</div>`;
+  });
+  html += `</div></div>`;
+
+  // Insights
+  html += `<div class="analytics-section"><div class="analytics-section-title">Insights</div>`;
+  const daysLeft = PLAN_DATA.filter(d => d.date >= today).length;
+  html += `<div class="insight-card">
+    <div class="insight-icon">⏳</div>
+    <div>
+      <div class="insight-title">${daysLeft} days remaining</div>
+      <div class="insight-desc">Until end of your finals period. Keep the momentum going!</div>
+    </div>
+  </div>`;
+  html += `<div class="insight-card">
+    <div class="insight-icon">📚</div>
+    <div>
+      <div class="insight-title">${s.studyHours.toFixed(1)} hours studied</div>
+      <div class="insight-desc">Quality over quantity — your consistent sessions add up.</div>
+    </div>
+  </div>`;
+  html += `<div class="insight-card">
+    <div class="insight-icon">🔥</div>
+    <div>
+      <div class="insight-title">${s.streak}-day streak</div>
+      <div class="insight-desc">Complete all non-free tasks in a day to extend your streak.</div>
+    </div>
+  </div>`;
+  html += `</div>`;
+
+  document.getElementById('analytics-container').innerHTML = html;
+}
+
+// ═══════════════════════════════════════════════
+// INTERACTIONS
+// ═══════════════════════════════════════════════
+
+function toggleTask(id, dayDate, e) {
+  if (e) e.stopPropagation();
+  state.done[id] = !state.done[id];
+  saveState();
+  updateTopBar();
+  refreshTask(id, dayDate);
+}
+
+function refreshTask(id, dayDate) {
+  const tasks = state.tasks[dayDate] || [];
+  const task = tasks.find(t => t.id === id);
+  if (!task) return;
+  const el = document.getElementById(`task-${id}`);
+  if (!el) return;
+  const done = !!state.done[id];
+  el.className = `task-block ${task.type} ${done?'done':''}`;
+  const check = el.querySelector('.task-check-icon');
+  if (check) check.style.display = done ? 'block' : 'none';
+  // Update day progress
+  refreshDayProgress(dayDate);
+}
+
+function refreshDayProgress(dayDate) {
+  const tasks = state.tasks[dayDate] || [];
+  const pct = dayProgress(tasks);
+  const card = document.getElementById(`day-${dayDate}`);
+  if (!card) return;
+  const dateEl = card.querySelector('.day-date');
+  const today = getToday();
+  if (dateEl) dateEl.textContent = `${pct}% complete${dayDate===today?' · Today':''}`;
+  // update mini circle
+  const miniEl = card.querySelector('.day-progress-mini');
+  const col = dayDate === today ? 'var(--accent2)' : 'var(--text3)';
+  if (miniEl) miniEl.innerHTML = miniCircle(pct, col);
+}
+
+function toggleCollapse(date) {
+  const card = document.getElementById(`day-${date}`);
+  if (!card) return;
+  const isCollapsed = card.classList.toggle('collapsed');
+  state.collapsed[date] = isCollapsed;
+  saveState();
+}
+
+function collapseAll() { PLAN_DATA.forEach(d => { state.collapsed[d.date] = true; document.getElementById(`day-${d.date}`)?.classList.add('collapsed'); }); saveState(); }
+function expandAll() { PLAN_DATA.forEach(d => { state.collapsed[d.date] = false; document.getElementById(`day-${d.date}`)?.classList.remove('collapsed'); }); saveState(); }
+
+function jumpToToday() {
+  const today = getToday();
+  showTab('schedule');
+  setTimeout(() => {
+    const el = document.getElementById(`day-${today}`);
+    if (el) { el.scrollIntoView({ behavior: 'smooth', block: 'start' }); el.classList.remove('collapsed'); }
+  }, 100);
+}
+
+// ═══════════════════════════════════════════════
+// TABS
+// ═══════════════════════════════════════════════
+
+function showTab(tab) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('page-' + tab)?.classList.add('active');
+  document.querySelector(`[data-tab="${tab}"]`)?.classList.add('active');
+  if (tab === 'today') renderToday();
+  if (tab === 'analytics') renderAnalytics();
+}
+
+// ═══════════════════════════════════════════════
+// ADD / EDIT / DELETE TASKS
+// ═══════════════════════════════════════════════
+
+let currentPriority = 'high';
+let editingId = null;
+let editingDay = null;
+
+function openAddTaskModal(dayDate) {
+  editingId = null;
+  editingDay = dayDate || null;
+  document.getElementById('modal-title').textContent = 'Add Task';
+  document.getElementById('task-title-input').value = '';
+  document.getElementById('task-desc-input').value = '';
+  document.getElementById('task-start').value = '09:00';
+  document.getElementById('task-end').value = '10:00';
+  document.getElementById('task-hours').value = '';
+  document.getElementById('task-type-select').value = 'mech306';
+  currentPriority = 'high';
+  refreshPriorityBtns();
+  // populate day select
+  const sel = document.getElementById('task-day-select');
+  sel.innerHTML = PLAN_DATA.map(d => `<option value="${d.date}" ${d.date === (dayDate || getToday()) ? 'selected' : ''}>${shortDate(d.date)} — ${formatDate(d.date).split(',')[0]}</option>`).join('');
+  document.getElementById('add-modal').classList.add('open');
+}
+
+function openEditModal(id, dayDate, e) {
+  if (e) e.stopPropagation();
+  editingId = id;
+  editingDay = dayDate;
+  const tasks = state.tasks[dayDate] || [];
+  const task = tasks.find(t => t.id === id);
+  if (!task) return;
+  document.getElementById('modal-title').textContent = 'Edit Task';
+  document.getElementById('task-title-input').value = task.title;
+  document.getElementById('task-desc-input').value = task.desc || '';
+  const times = (task.time || '').split('–');
+  document.getElementById('task-start').value = times[0] || '09:00';
+  document.getElementById('task-end').value = times[1] || '10:00';
+  document.getElementById('task-hours').value = task.hours || '';
+  document.getElementById('task-type-select').value = task.type;
+  currentPriority = task.priority || 'high';
+  refreshPriorityBtns();
+  const sel = document.getElementById('task-day-select');
+  sel.innerHTML = PLAN_DATA.map(d => `<option value="${d.date}" ${d.date === dayDate ? 'selected' : ''}>${shortDate(d.date)} — ${formatDate(d.date).split(',')[0]}</option>`).join('');
+  sel.value = dayDate;
+  document.getElementById('add-modal').classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('add-modal').classList.remove('open');
+  editingId = null; editingDay = null;
+}
+
+function selectPriority(p, btn) {
+  currentPriority = p;
+  refreshPriorityBtns();
+}
+
+function refreshPriorityBtns() {
+  document.querySelectorAll('.priority-btn').forEach(b => {
+    b.className = 'priority-btn';
+    if (b.textContent.includes('High') && currentPriority==='high') b.classList.add('selected-high');
+    if (b.textContent.includes('Med') && currentPriority==='med') b.classList.add('selected-med');
+    if (b.textContent.includes('Low') && currentPriority==='low') b.classList.add('selected-low');
+  });
+}
+
+function saveTask() {
+  const title = document.getElementById('task-title-input').value.trim();
+  if (!title) { document.getElementById('task-title-input').focus(); return; }
+  const dayDate = document.getElementById('task-day-select').value;
+  const type = document.getElementById('task-type-select').value;
+  const start = document.getElementById('task-start').value;
+  const end = document.getElementById('task-end').value;
+  const desc = document.getElementById('task-desc-input').value.trim();
+  const hours = parseFloat(document.getElementById('task-hours').value) || 0;
+  const time = start && end ? `${start}–${end}` : (start || '');
+
+  if (!state.tasks[dayDate]) state.tasks[dayDate] = [];
+
+  if (editingId) {
+    // find and update
+    const oldDay = editingDay;
+    const oldTasks = state.tasks[oldDay] || [];
+    const idx = oldTasks.findIndex(t => t.id === editingId);
+    if (idx > -1) {
+      const updated = { ...oldTasks[idx], title, type, time, desc, hours, priority: currentPriority };
+      if (oldDay === dayDate) {
+        state.tasks[oldDay][idx] = updated;
+      } else {
+        state.tasks[oldDay].splice(idx, 1);
+        state.tasks[dayDate].push(updated);
+      }
+    }
+  } else {
+    state.customTaskCounter++;
+    const newTask = {
+      id: 'c' + state.customTaskCounter,
+      title, type, time, desc, hours, priority: currentPriority
+    };
+    state.tasks[dayDate].push(newTask);
+  }
+
+  saveState();
+  closeModal();
+  renderSchedule();
+  if (document.getElementById('page-today').classList.contains('active')) renderToday();
+  updateTopBar();
+}
+
+function deleteTask(id, dayDate, e) {
+  if (e) e.stopPropagation();
+  if (!confirm('Delete this task?')) return;
+  if (state.tasks[dayDate]) {
+    state.tasks[dayDate] = state.tasks[dayDate].filter(t => t.id !== id);
+  }
+  delete state.done[id];
+  saveState();
+  renderSchedule();
+  if (document.getElementById('page-today').classList.contains('active')) renderToday();
+  updateTopBar();
+}
+
+// ═══════════════════════════════════════════════
+// CONTEXT MENU
+// ═══════════════════════════════════════════════
+
+let ctxTaskId = null, ctxDayDate = null;
+
+function showCtx(e, id, dayDate) {
+  e.preventDefault();
+  ctxTaskId = id; ctxDayDate = dayDate;
+  const menu = document.getElementById('ctx-menu');
+  menu.style.left = Math.min(e.clientX, window.innerWidth - 170) + 'px';
+  menu.style.top = Math.min(e.clientY, window.innerHeight - 130) + 'px';
+  menu.classList.add('open');
+}
+
+function hideCtx() { document.getElementById('ctx-menu').classList.remove('open'); }
+function ctxEdit() { hideCtx(); openEditModal(ctxTaskId, ctxDayDate); }
+function ctxToggle() { hideCtx(); toggleTask(ctxTaskId, ctxDayDate); }
+function ctxDelete() { hideCtx(); deleteTask(ctxTaskId, ctxDayDate); }
+document.addEventListener('click', hideCtx);
+
+// ═══════════════════════════════════════════════
+// DRAG & DROP
+// ═══════════════════════════════════════════════
+
+let dragId = null, dragDay = null;
+
+function dragStart(e, id, day) {
+  dragId = id; dragDay = day;
+  e.dataTransfer.effectAllowed = 'move';
+  document.getElementById(`task-${id}`)?.classList.add('dragging');
+}
+
+function dragOver(e) {
+  e.preventDefault();
+  e.dataTransfer.dropEffect = 'move';
+  e.currentTarget.classList.add('drag-over');
+}
+
+function dragLeave(e) { e.currentTarget.classList.remove('drag-over'); }
+
+function dropTask(e, targetDay) {
+  e.preventDefault();
+  e.currentTarget.classList.remove('drag-over');
+  if (!dragId || !dragDay) return;
+  if (dragDay === targetDay) { dragId = null; dragDay = null; return; }
+  const srcTasks = state.tasks[dragDay] || [];
+  const idx = srcTasks.findIndex(t => t.id === dragId);
+  if (idx === -1) { dragId = null; dragDay = null; return; }
+  const task = srcTasks.splice(idx, 1)[0];
+  if (!state.tasks[targetDay]) state.tasks[targetDay] = [];
+  state.tasks[targetDay].push(task);
+  saveState();
+  renderSchedule();
+  updateTopBar();
+  dragId = null; dragDay = null;
+}
+
+document.addEventListener('dragend', () => {
+  document.querySelectorAll('.task-block.dragging').forEach(el => el.classList.remove('dragging'));
+});
+
+// ═══════════════════════════════════════════════
+// EXPORT / IMPORT
+// ═══════════════════════════════════════════════
+
+function exportData() {
+  const data = JSON.stringify({ done: state.done, tasks: state.tasks, customTaskCounter: state.customTaskCounter }, null, 2);
+  const blob = new Blob([data], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href = url; a.download = 'finals-planner-backup.json'; a.click();
+  URL.revokeObjectURL(url);
+}
+
+function triggerImport() { document.getElementById('import-file').click(); }
+
+function importData(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    try {
+      const d = JSON.parse(ev.target.result);
+      if (d.done) state.done = d.done;
+      if (d.tasks) state.tasks = d.tasks;
+      if (d.customTaskCounter) state.customTaskCounter = d.customTaskCounter;
+      saveState();
+      renderSchedule();
+      updateTopBar();
+      alert('Import successful!');
+    } catch { alert('Invalid file.'); }
+  };
+  reader.readAsText(file);
+}
+
+function openImportExport() { showTab('settings'); }
+
+function resetProgress() {
+  if (!confirm('Reset all checkboxes?')) return;
+  state.done = {};
+  saveState();
+  renderSchedule();
+  updateTopBar();
+}
+
+function resetAll() {
+  if (!confirm('Reset everything to defaults? This cannot be undone.')) return;
+  localStorage.removeItem('finals-planner-v2');
+  location.reload();
+}
+
+// ═══════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════
+
+function init() {
+  loadState();
+  renderSchedule();
+  updateTopBar();
+  // auto-jump to today on load (in schedule tab)
+  const today = getToday();
+  setTimeout(() => {
+    const el = document.getElementById(`day-${today}`);
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, 400);
+}
+
+init();
+</script>
+</body>
+</html>
